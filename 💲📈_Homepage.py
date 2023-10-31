@@ -21,7 +21,7 @@ def load_data_from_s3(bucket_name, file_key):
 # Import the csv files from S3 bucket
 # 1. Pharmaceutical sales (=FACT table including time series)
 bucket_name = "pharma-sales-forecasting"
-file_key = "French_pharmaceutical_sales.csv"
+file_key = "Product_base.csv"
 df = load_data_from_s3(bucket_name, file_key)
 
 # Interface Streamlit
