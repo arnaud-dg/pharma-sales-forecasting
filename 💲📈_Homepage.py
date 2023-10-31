@@ -58,7 +58,7 @@ forecasting_method = st.sidebar.selectbox('Which forecasting method would you li
 # df_chart = fetch_data(query)
 # df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
 
-query = "SELECT * FROM ATC1 WHERE ATC_Class2 = 'VITAMINES'"
+query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
 df_chart = fetch_data(query)
 df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
 
