@@ -50,7 +50,7 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
 # data_to_forecast = st.sidebar.radio("What kind of data do you wish to forecast",["***A drug family***", "***A product***", "***A reference (CIP code)***"])
 prediction_timeframe = st.sidebar.slider('How many months do you wish to predict?', min_value=3, value=6, max_value=12, step=1)
 selected_product = st.sidebar.selectbox('Which product would you like to forecast?', product_list)
-forecasting_method = st.sidebar.selectbox('Which product would you like to forecast?', product_list)
+forecasting_method = st.sidebar.selectbox('Which forecasting method would you like to apply', ['ARIMA', 'Prophet', 'LSTM', 'Exponential Smoothing', 'Linear Regression'])
 
 # Get the data from snowflake
 query = "SELECT * FROM ATC1 WHERE ATC_Class = {}".format(selected_product)
