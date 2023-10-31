@@ -53,5 +53,7 @@ selected_product = st.sidebar.selectbox('Which product would you like to forecas
 forecasting_method = st.sidebar.selectbox('Which product would you like to forecast?', product_list)
 
 # Get the data from snowflake
-df_chart = fetch_data("SELECT * FROM ATC1 WHERE ATC_Class = {}".format(selected_product))
+query = "SELECT * FROM ATC1 WHERE ATC_Class = {}".format(selected_product)
+st.write(quary)
+df_chart = fetch_data(query)
 st.dataframe(df_chart)
