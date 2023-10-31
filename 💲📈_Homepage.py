@@ -18,27 +18,18 @@ def load_data_from_s3(bucket_name, file_key):
     df = pd.read_csv(BytesIO(content))
     return df
   
-# Import the csv files from S3 bucket
-# 1. Pharmaceutical sales (=FACT table including time series)
+# Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
 file_key = "Product_base.csv"
-df = load_data_from_s3(bucket_name, file_key)
+df_product = load_data_from_s3(bucket_name, file_key)
 
 # Interface Streamlit
-st.title("Pharmaceutical sales forecasting")
+st.title("🏥 French Pharmaceutical Sales Forecasting")
 
-st.dataframe(df)
+st.dataframe(df_product)
 
-
-
-
-# Drop-down list of the sidebar
-# df_disease = fetch_data("select $1 from available_diseases")
-# st.sidebar.write("""This web application, made with Streamlit, is a personal project I undertook to practice with AWS, Snowflake, SQL, and Python.
-# The aim of this application is to provide a synthetic analysis of past and ongoing clinical studies for a given pathology.
-# To limit the data volume, only a few pathologies have been set up. The data comes from the Clinicaltrials.gov API.""")
-# st.sidebar.write("""Enjoy the journey! :sunglasses:""")
-# st.sidebar.markdown("""---""")
-# selected_disease = st.sidebar.selectbox("Please select a pathology:", df_disease['$1'].tolist())
-
-# st.title('🏥 Clinical Trials .Gov Explorer 🧑‍⚕️')
+st.sidebar.write("""This web application, made with Streamlit, is a personal project I undertook to practice with Time-series Forecasting. 
+                 The technical stack used implies AWS, Snowflake, SQL, and Python. 
+                 The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
+data_to_forecast = st.radio("What kind of data do you wish to forecast",["***A drug family***", "***A product***", "***A reference (CIP code)***"])
+prediction_timeframe = st.slider('how many months do you wish to predict?', 3, 12, 1)
