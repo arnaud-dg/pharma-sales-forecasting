@@ -1,0 +1,7 @@
+boto3
+pandas
+matplotlib.pyplot
+seaborn
+io
+streamlit
+altair
