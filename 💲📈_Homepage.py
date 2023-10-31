@@ -54,6 +54,6 @@ forecasting_method = st.sidebar.selectbox('Which forecasting method would you li
 
 # Get the data from snowflake
 query = "SELECT * FROM ATC1 WHERE ATC_Class = {}".format(selected_product)
-st.write(quary)
+st.write(query)
 df_chart = fetch_data(query)
 st.dataframe(df_chart)
