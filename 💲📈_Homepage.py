@@ -26,6 +26,7 @@ df_product = load_data_from_s3(bucket_name, file_key)
 # Extract the list of unique product
 product_list = list(df_product['ATC_Class'].unique())
 product_list.sort()
+product_list = product_list[:5]
 
 st.write(len(product_list))
 
