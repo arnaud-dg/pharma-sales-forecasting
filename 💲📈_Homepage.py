@@ -63,5 +63,5 @@ df_chart = fetch_data(query)
 df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
 
 # Affichage du graphique altair
-st.line_chart(data=df_chart, x='SALESDATE', y='AMOUNT')
+st.line_chart(data=df_chart, x='SALESDATE', y='NB_UNITS')
 st.dataframe(df_chart)
