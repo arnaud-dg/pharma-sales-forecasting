@@ -23,6 +23,10 @@ bucket_name = "pharma-sales-forecasting"
 file_key = "Product_base.csv"
 df_product = load_data_from_s3(bucket_name, file_key)
 
+# Extract the list of unique product
+product_list = list(df_product['Product_Name'].unique())
+product_list.sort(key='Product_Name')
+
 # Interface Streamlit
 st.title("🏥 French Pharmaceutical Sales Forecasting")
 
@@ -31,5 +35,6 @@ st.dataframe(df_product)
 st.sidebar.write("""This web application, made with Streamlit, is a personal project I undertook to practice with Time-series Forecasting. 
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
                  The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
-data_to_forecast = st.radio("What kind of data do you wish to forecast",["***A drug family***", "***A product***", "***A reference (CIP code)***"])
-prediction_timeframe = st.slider('how many months do you wish to predict?', 3, 12, 1)
+# data_to_forecast = st.sidebar.radio("What kind of data do you wish to forecast",["***A drug family***", "***A product***", "***A reference (CIP code)***"])
+prediction_timeframe = st.sidebar.slider('How many months do you wish to predict?', 3, 12, 1)
+selected_product = st.sidebar.selectbox('Which product would you like to forecast?', product_list)
