@@ -59,10 +59,7 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
                  The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
 
-tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
-
-with tab1:
-    col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)
     with col1:
         selection = st.selectbox('Product family to forecast:', product_list)    
     with col2:
@@ -71,44 +68,58 @@ with tab1:
         method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
         prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
-    
+
+tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
+with tab1:
     # Filter the dataframe
     if scope == 'Both':
         df = df_family[df_family['PRODUCT'] == selection]
     else:
         df = df_family_scope[(df_family_scope['PRODUCT'] == selection) & (df_family_scope['SCOPE'] == scope)]
 
+    # Prediction function
+    if method == 'Linear Regression':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+    elif method == 'Moving Average':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        # predictions = ff.predict_moving_average(df, prediction_timeframe)
+    elif method == 'Exponential Smoothing':
+        predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
+    elif method == 'ARIMA':
+        predictions = ff.predict_auto_arima(df, prediction_timeframe)
+    elif method == 'LSTM':
+        predictions = ff.predict_lstm(df, prediction_timeframe)
+    elif method == 'Prophet':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        # predictions = ff.predict_prophet(df, prediction_timeframe)
+
+    # Chart
+    # st.dataframe(df)
+    # st.dataframe(predictions)
+    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
 with tab2:
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        selection2 = st.selectbox('Product to forecast:', product_list)    
-    with col2:
-        scope2 = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
-    with col3:
-        method2 = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
-    with col4:
-        prediction_timeframe2 = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
-    
     # Filter the dataframe
     if scope == 'Both':
-        df = df_product[df_product['PRODUCT'] == selection2]
+        df = df_product[df_product['PRODUCT'] == selection]
     else:
-        df = df_product_scope[(df_product_scope['PRODUCT'] == selection2) & (df_product_scope['SCOPE'] == scope2)]
+        df = df_product_scope[(df_product_scope['PRODUCT'] == selection) & (df_product_scope['SCOPE'] == scope)]
 
     # Prediction function
     if method == 'Linear Regression':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe2)
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
     elif method == 'Moving Average':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe2)
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
         # predictions = ff.predict_moving_average(df, prediction_timeframe)
     elif method == 'Exponential Smoothing':
-        predictions = ff.predict_exponential_smoothing(df, prediction_timeframe2)
+        predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
     elif method == 'ARIMA':
-        predictions = ff.predict_auto_arima(df, prediction_timeframe2)
+        predictions = ff.predict_auto_arima(df, prediction_timeframe)
     elif method == 'LSTM':
-        predictions = ff.predict_lstm(df, prediction_timeframe2)
+        predictions = ff.predict_lstm(df, prediction_timeframe)
     elif method == 'Prophet':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe2)
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
         # predictions = ff.predict_prophet(df, prediction_timeframe)
 
     # Chart
