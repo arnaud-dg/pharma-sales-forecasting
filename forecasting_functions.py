@@ -4,6 +4,8 @@ import numpy as np
 from statsmodels.tsa.holtwinters import SimpleExpSmoothing
 from statsmodels.tsa.arima.model import ARIMA
 from pmdarima import auto_arima
+from keras.models import Sequential
+from keras.layers import LSTM, Dense
 
 def predict_linear_regression(df, n_months):
     """

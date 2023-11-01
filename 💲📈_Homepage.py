@@ -34,11 +34,14 @@ def load_data_from_s3(bucket_name, file_key):
     df = pd.read_csv(BytesIO(content))
     return df
 
-def load_data_from_snowflake():
-    """Get a .csv file from a S3 bucket and transform it as a dataframe"""
+df_product = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
+df_product_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1")
+df_family = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
+df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2")
+for i in [df_product, df_product_scope, df_family, df_family_scope]:
+    i['DATE'] = pd.to_datetime(i['DATE'])
+    i['TYPE'] = 'Actual'
 
-    return df
-  
 # Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
 file_key = "Product_base.csv"
@@ -61,40 +64,59 @@ tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Fore
 with tab1:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        selection = st.selectbox('Product category to forecast:', product_list)
-        query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
+        selection = st.selectbox('Product family to forecast:', product_list)    
     with col2:
         scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
-        if scope == "Both":
-            query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
-        elif scope == "Community pharmacy":
-            query = r"SELECT DATE, VALUE FROM ATC1_BY_MARKET WHERE PRODUCT = '{}' AND SCOPE = '{}'".format(selection, "Community")
-        elif scope == "Hospital":
-            query = r"SELECT DATE, VALUE FROM ATC1_BY_MARKET WHERE PRODUCT = '{}' AND SCOPE = '{}'".format(selection, "Hospital")
     with col3:
-        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
         prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
-    # Get the data from snowflake
-    df = fetch_data(query)
-    df['DATE'] = pd.to_datetime(df['DATE'])
-    df['TYPE'] = 'Actual'
+    
+    # Filter the dataframe
+    if scope == 'Both':
+        df = df_family[df_family['PRODUCT'] == selection]
+    else:
+        df = df_family_scope[(df_family_scope['PRODUCT'] == selection) & (df_family_scope['SCOPE'] == scope)]
+
+
+with tab2:
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        selection = st.selectbox('Product to forecast:', product_list)    
+    with col2:
+        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
+    with col3:
+        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+    with col4:
+        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
+    
+    # Filter the dataframe
+    if scope == 'Both':
+        df = df_product[df_product['PRODUCT'] == selection]
+    else:
+        df = df_product_scope[(df_product_scope['PRODUCT'] == selection) & (df_product_scope['SCOPE'] == scope)]
+
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
+    elif method == 'Moving Average':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        # predictions = ff.predict_moving_average(df, prediction_timeframe)
     elif method == 'Exponential Smoothing':
         predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
     elif method == 'ARIMA':
         predictions = ff.predict_auto_arima(df, prediction_timeframe)
+    elif method == 'LSTM':
+        predictions = ff.predict_lstm(df, prediction_timeframe)
+    elif method == 'Prophet':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        # predictions = ff.predict_prophet(df, prediction_timeframe)
+
     # Chart
-    st.dataframe(df)
-    st.dataframe(predictions)
+    # st.dataframe(df)
+    # st.dataframe(predictions)
     fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
-
-with tab2:
-   st.header("A dog")
-   st.image("https://static.streamlit.io/examples/dog.jpg", width=200)
 
 with tab3:
    st.header("An owl")
