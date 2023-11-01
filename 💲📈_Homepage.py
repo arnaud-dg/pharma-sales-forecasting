@@ -57,11 +57,11 @@ with tab1:
     with col1:
         selection = st.selectbox('Product category to forecast:', product_list)
     with col2:
-        scope = st.selectbox('Forecasting scope:', ['Community pharmacy', 'Hospital', 'Both'], value='Both')
+        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
     with col3:
         method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
-        prediction_timeframe = st.slider('How many months do you wish to predict?', min_value=3, value=6, max_value=12, step=1)
+        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
     # Get the data from snowflake    
     query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
     df = fetch_data(query)
