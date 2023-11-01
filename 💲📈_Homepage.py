@@ -65,7 +65,7 @@ with tab1:
     # Get the data from snowflake    
     query = "SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
     df = fetch_data(query)
-    df['DATE'] = pd.to_datetime(df_chart['DATE'])
+    df['DATE'] = pd.to_datetime(df['DATE'])
     df['TYPE'] = 'Actual'
     st.dataframe(df)
     # Prediction function
