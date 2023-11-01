@@ -2,3 +2,4 @@ boto3
 pandas
 streamlit
 snowflake-connector-python
+scikit-learn

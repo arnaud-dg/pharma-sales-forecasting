@@ -5,6 +5,7 @@ from io import BytesIO
 import streamlit as st
 import altair as alt
 import snowflake.connector
+import forecasting_functions as ff
 
 # Layout of the main page
 st.set_page_config(layout="wide")
@@ -48,10 +49,6 @@ st.title("🏥 French Pharmaceutical Sales Forecasting")
 st.sidebar.write("""This web application, made with Streamlit, is a personal project I undertook to practice with Time-series Forecasting. 
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
                  The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
-# data_to_forecast = st.sidebar.radio("What kind of data do you wish to forecast",["***A drug family***", "***A product***", "***A reference (CIP code)***"])
-
-
-
 
 tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
 
@@ -65,10 +62,16 @@ with tab1:
         method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
         prediction_timeframe = st.slider('How many months do you wish to predict?', min_value=3, value=6, max_value=12, step=1)
+    # Get the data from snowflake    
     query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
-    df_chart = fetch_data(query)
-    df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
-    st.line_chart(data=df_chart, x='SALESDATE', y='NB_UNITS')
+    df = fetch_data(query)
+    # Prediction function
+    if method == 'Linear Regression':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        st.dataframe(predictions)
+    # Chart
+    df['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
+    st.line_chart(data=df, x='SALESDATE', y='NB_UNITS')
 
 with tab2:
    st.header("A dog")
