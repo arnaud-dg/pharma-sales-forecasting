@@ -7,3 +7,4 @@ plotly
 statsmodels
 pmdarima
 keras
+tensorflow
