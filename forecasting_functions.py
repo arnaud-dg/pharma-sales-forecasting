@@ -5,7 +5,7 @@ import numpy as np
 def predict_linear_regression(df, n_months):
     """
     Predict sales for the next 'n' months using linear regression.
-    :param df: DataFrame containing a 'sales' column with monthly sales data.
+    :param df: DataFrame containing a 'Value' column with monthly sales data.
     :n_months: Number of months to predict.
     :return: List with predictions for the next 'n' months.
     """
@@ -14,7 +14,7 @@ def predict_linear_regression(df, n_months):
 
     # Split data into input variables X and target variable y
     X = df['month_num'].values.reshape(-1, 1)
-    y = df['sales']
+    y = df['NB_UNITS']
 
     # Initialize and train the model
     model = LinearRegression()
