@@ -49,19 +49,45 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
                  The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
 # data_to_forecast = st.sidebar.radio("What kind of data do you wish to forecast",["***A drug family***", "***A product***", "***A reference (CIP code)***"])
-prediction_timeframe = st.sidebar.slider('How many months do you wish to predict?', min_value=3, value=6, max_value=12, step=1)
-selected_product = st.sidebar.selectbox('Which product would you like to forecast?', product_list)
-forecasting_method = st.sidebar.selectbox('Which forecasting method would you like to apply', ['ARIMA', 'Prophet', 'LSTM', 'Exponential Smoothing', 'Linear Regression'])
+
+
+
+
+tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
+
+with tab1:
+    col1, col2, col3 = st.columns(4)
+    with col1:
+        selection = st.sidebar.selectbox('Product category to forecast:', product_list)
+    with col2:
+        scope = st.sidebar.selectbox('Forecasting scope:', ['Community pharmacy', 'Hospital', 'Both'])
+    with col3:
+        method = st.sidebar.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+    with col4:
+        prediction_timeframe = st.sidebar.slider('How many months do you wish to predict?', min_value=3, value=6, max_value=12, step=1)
+    query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
+    df_chart = fetch_data(query)
+    df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
+    st.line_chart(data=df_chart, x='SALESDATE', y='NB_UNITS')
+
+
+with tab2:
+   st.header("A dog")
+   st.image("https://static.streamlit.io/examples/dog.jpg", width=200)
+
+with tab3:
+   st.header("An owl")
+   st.image("https://static.streamlit.io/examples/owl.jpg", width=200)
 
 # Get the data from snowflake
 # query = "SELECT * FROM ATC1 WHERE ATC_Class = '" + selected_product + "'"
 # df_chart = fetch_data(query)
 # df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
 
-query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
-df_chart = fetch_data(query)
-df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
+# query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
+# df_chart = fetch_data(query)
+# df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
 
-# Affichage du graphique altair
-st.line_chart(data=df_chart, x='SALESDATE', y='NB_UNITS')
-st.dataframe(df_chart)
+# # Affichage du graphique altair
+# st.line_chart(data=df_chart, x='SALESDATE', y='NB_UNITS')
+# st.dataframe(df_chart)
