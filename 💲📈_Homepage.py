@@ -63,15 +63,17 @@ with tab1:
     with col4:
         prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
     # Get the data from snowflake    
-    query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
+    query = "SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
     df = fetch_data(query)
-    df = df[['SALESDATE', 'NB_UNITS']]
+    df['DATE'] = pd.to_datetime(df_chart['DATE'])
+    df['TYPE'] = 'Actual'
+    st.dataframe(df)
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
         st.dataframe(predictions)
     # Chart
-    df['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
+    
     st.line_chart(data=df, x='SALESDATE', y='NB_UNITS')
 
 with tab2:
