@@ -83,6 +83,7 @@ with tab1:
 
 with tab2:
     # Filter the dataframe
+    st.write(selection)
     if scope == 'Both':
         df = df_product[df_product['PRODUCT'] == selection]
     else:
