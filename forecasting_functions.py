@@ -63,7 +63,7 @@ def predict_exponential_smoothing(df, n_months):
         
         return predictions
     
-def predict_auto_arima(df, n_months=6):
+def predict_auto_arima(df, n_months):
         """
         Predict sales for the next 'n' months using auto ARIMA.
         
@@ -73,7 +73,7 @@ def predict_auto_arima(df, n_months=6):
         """
         
         # Fit the ARIMA model using auto_arima
-        model = auto_arima(df['VALUE'], trace=True, error_action='ignore', suppress_warnings=True, seasonal=False)
+        model = auto_arima(df['VALUE'], trace=True, error_action='ignore', suppress_warnings=True, seasonal=True)
         
         # Predict the next 'n' months
         forecasts = model.predict(n_periods=n_months)
@@ -84,6 +84,7 @@ def predict_auto_arima(df, n_months=6):
 
         result = pd.DataFrame({'DATE': new_dates, 'VALUE': forecasts})
         result['TYPE'] = 'Forecast'
-        predictions_df = pd.concat([df, result], axis=0)
+        result.loc[result['VALUE'] < 0, 'VALUE'] = 0
+        predictions = pd.concat([df, result], axis=0)
         
-        return predictions_df
+        return predictions

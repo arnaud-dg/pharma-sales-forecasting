@@ -87,7 +87,9 @@ with tab1:
     elif method == 'ARIMA':
         predictions = ff.predict_auto_arima(df, prediction_timeframe)
     # Chart
-    fig = px.line(predictions,x="DATE",y="VALUE",color="TYPE")
+    st.dataframe(df)
+    st.dataframe(predictions)
+    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab2:
