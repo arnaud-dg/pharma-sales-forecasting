@@ -78,6 +78,7 @@ with col4:
 
 tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
 with tab1:
+    st.write("blabla")
     # Filter the dataframe
 
 with tab2:
