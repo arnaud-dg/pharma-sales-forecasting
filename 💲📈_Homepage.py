@@ -42,6 +42,11 @@ for i in [df_product, df_product_scope, df_family, df_family_scope]:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
 
+st.dataframe(df_product)
+st.dataframe(df_product_scope)
+st.dataframe(df_family)
+st.dataframe(df_family_scope)
+
 # Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
 file_key = "Product_base.csv"
@@ -77,8 +82,6 @@ with tab1:
     else:
         df = df_family_scope[(df_family_scope['PRODUCT'] == selection) & (df_family_scope['SCOPE'] == scope)]
 
-    st.dataframe(df)
-    
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
