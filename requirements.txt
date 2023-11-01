@@ -4,3 +4,4 @@ streamlit
 snowflake-connector-python
 scikit-learn
 plotly
+statsmodels

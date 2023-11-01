@@ -80,7 +80,7 @@ with tab1:
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
-    elif method == 'Exponential Smoothing'
+    elif method == 'Exponential Smoothing':
         predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
     # Chart
     fig = px.line(predictions,x="DATE",y="VALUE",color="TYPE")
