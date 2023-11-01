@@ -88,6 +88,8 @@ with tab2:
     else:
         df = df_product_scope[(df_product_scope['PRODUCT'] == selection) & (df_product_scope['SCOPE'] == scope)]
 
+    st.dataframe(df)
+    
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
