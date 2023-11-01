@@ -67,8 +67,10 @@ with tab1:
         scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
         if scope == "Both":
             query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
-        else:
-            query = r"SELECT DATE, VALUE FROM ATC1_BY_MARKET WHERE PRODUCT = '{}' AND MARKET = '{}'".format(selection, scope)
+        elif scope == "Community pharmacy":
+            query = r"SELECT DATE, VALUE FROM ATC1_BY_MARKET WHERE PRODUCT = '{}' AND SCOPE = '{}'".format(selection, "Community")
+        elif scope == "Hospital":
+            query = r"SELECT DATE, VALUE FROM ATC1_BY_MARKET WHERE PRODUCT = '{}' AND SCOPE = '{}'".format(selection, "Hospital")
     with col3:
         method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
@@ -82,6 +84,8 @@ with tab1:
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
     elif method == 'Exponential Smoothing':
         predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
+    elif method == 'ARIMA':
+        predictions = ff.predict_auto_arima(df, prediction_timeframe)
     # Chart
     fig = px.line(predictions,x="DATE",y="VALUE",color="TYPE")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)

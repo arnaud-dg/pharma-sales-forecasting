@@ -38,7 +38,7 @@ def predict_linear_regression(df, n_months):
 
     return predictions
 
-    def predict_exponential_smoothing(df, n_months):
+def predict_exponential_smoothing(df, n_months):
         """
         Predict sales for the next 'n' months using exponential smoothing.
         :param df: DataFrame containing a 'VALUE' column with monthly sales data.
@@ -63,7 +63,7 @@ def predict_linear_regression(df, n_months):
         
         return predictions
     
-    def predict_auto_arima(df, n_months=6):
+def predict_auto_arima(df, n_months=6):
         """
         Predict sales for the next 'n' months using auto ARIMA.
         
