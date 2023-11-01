@@ -42,7 +42,7 @@ for i in [df_product, df_product_scope, df_family, df_family_scope]:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
 
-st.dataframe(df_product)
+st.dataframe(df_product[df_product['PRODUCT'] == 'ABACAVIR'])
 st.dataframe(df_product_scope)
 st.dataframe(df_family)
 st.dataframe(df_family_scope)
@@ -88,8 +88,6 @@ with tab2:
     else:
         df = df_product_scope[(df_product_scope['PRODUCT'] == selection) & (df_product_scope['SCOPE'] == scope)]
 
-    st.dataframe(df)
-    
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
