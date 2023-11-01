@@ -77,6 +77,8 @@ with tab1:
     else:
         df = df_family_scope[(df_family_scope['PRODUCT'] == selection) & (df_family_scope['SCOPE'] == scope)]
 
+    st.dataframe(df)
+    
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
