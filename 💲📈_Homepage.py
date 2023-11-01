@@ -33,6 +33,11 @@ def load_data_from_s3(bucket_name, file_key):
     content = response['Body'].read()
     df = pd.read_csv(BytesIO(content))
     return df
+
+def load_data_from_snowflake():
+    """Get a .csv file from a S3 bucket and transform it as a dataframe"""
+
+    return df
   
 # Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
@@ -57,21 +62,24 @@ with tab1:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
         selection = st.selectbox('Product category to forecast:', product_list)
+        query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
     with col2:
         scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
+        if scope == "Both":
+            query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
+        else:
+            query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}' AND MARKET = '{}'".format(selection, scope)
     with col3:
         method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
         prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
-    # Get the data from snowflake    
-    query = "SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
+    # Get the data from snowflake
     df = fetch_data(query)
     df['DATE'] = pd.to_datetime(df['DATE'])
     df['TYPE'] = 'Actual'
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
-        st.dataframe(predictions)
     # Chart
     fig = px.line(predictions,x="DATE",y="VALUE",color="TYPE")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
