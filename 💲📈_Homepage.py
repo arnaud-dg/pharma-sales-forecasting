@@ -35,9 +35,9 @@ def load_data_from_s3(bucket_name, file_key):
     return df
 
 df_product = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
-df_product_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1")
+df_product_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
 df_family = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
-df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2")
+df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
 for i in [df_product, df_product_scope, df_family, df_family_scope]:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
