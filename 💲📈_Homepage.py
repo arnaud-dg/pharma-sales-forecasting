@@ -68,7 +68,7 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    selection = st.selectbox('Product family to forecast:', family_list)    
+    selection = st.selectbox('Product family to forecast:', product_list)    
 with col2:
     scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
 with col3:
@@ -79,32 +79,6 @@ with col4:
 tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
 with tab1:
     # Filter the dataframe
-    if scope == 'Both':
-        df = df_family[df_family['PRODUCT'] == selection]
-    else:
-        df = df_family_scope[(df_family_scope['PRODUCT'] == selection) & (df_family_scope['SCOPE'] == scope)]
-
-    # Prediction function
-    if method == 'Linear Regression':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe)
-    elif method == 'Moving Average':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe)
-        # predictions = ff.predict_moving_average(df, prediction_timeframe)
-    elif method == 'Exponential Smoothing':
-        predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
-    elif method == 'ARIMA':
-        predictions = ff.predict_auto_arima(df, prediction_timeframe)
-    elif method == 'LSTM':
-        predictions = ff.predict_lstm(df, prediction_timeframe)
-    elif method == 'Prophet':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe)
-        # predictions = ff.predict_prophet(df, prediction_timeframe)
-
-    # Chart
-    # st.dataframe(df)
-    # st.dataframe(predictions)
-    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
-    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab2:
     # Filter the dataframe
