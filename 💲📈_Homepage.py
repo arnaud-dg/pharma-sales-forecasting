@@ -58,18 +58,17 @@ tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Fore
 with tab1:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        selection = st.sidebar.selectbox('Product category to forecast:', product_list)
+        selection = st.selectbox('Product category to forecast:', product_list)
     with col2:
-        scope = st.sidebar.selectbox('Forecasting scope:', ['Community pharmacy', 'Hospital', 'Both'])
+        scope = st.selectbox('Forecasting scope:', ['Community pharmacy', 'Hospital', 'Both'])
     with col3:
-        method = st.sidebar.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
-        prediction_timeframe = st.sidebar.slider('How many months do you wish to predict?', min_value=3, value=6, max_value=12, step=1)
+        prediction_timeframe = st.slider('How many months do you wish to predict?', min_value=3, value=6, max_value=12, step=1)
     query = "SELECT * FROM ATC2 WHERE ATC_Class2 = 'VITAMINES'"
     df_chart = fetch_data(query)
     df_chart['SALESDATE'] = pd.to_datetime(df_chart['SALESDATE'])
     st.line_chart(data=df_chart, x='SALESDATE', y='NB_UNITS')
-
 
 with tab2:
    st.header("A dog")
