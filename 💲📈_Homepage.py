@@ -78,7 +78,6 @@ with tab1:
     else:
         df = df_family_scope[(df_family_scope['PRODUCT'] == selection) & (df_family_scope['SCOPE'] == scope)]
 
-
 with tab2:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -115,7 +114,7 @@ with tab2:
     # Chart
     # st.dataframe(df)
     # st.dataframe(predictions)
-    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
+    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE", title="Sales prediction for " + selection")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab3:
