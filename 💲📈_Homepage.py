@@ -60,14 +60,14 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
                  The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
 
 col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        selection = st.selectbox('Product family to forecast:', product_list)    
-    with col2:
-        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
-    with col3:
-        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
-    with col4:
-        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
+with col1:
+    selection = st.selectbox('Product family to forecast:', product_list)    
+with col2:
+    scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
+with col3:
+    method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+with col4:
+    prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
 
 tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
 with tab1:
