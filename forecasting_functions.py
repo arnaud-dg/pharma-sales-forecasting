@@ -30,6 +30,7 @@ def predict_linear_regression(df, n_months):
     df = df.drop('month_num', axis=1)
     result = pd.DataFrame({'DATE': new_dates, 'VALUE': predictions})
     result['TYPE'] = 'Forecast'
+    result.loc[result['VALUE'] < 0, 'VALUE'] = 0
     predictions = pd.concat([df, result], axis=0)
     # predictions = pd.concat([predictions, new_dates], axis=1)
 

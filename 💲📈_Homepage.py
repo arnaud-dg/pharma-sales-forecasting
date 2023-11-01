@@ -73,7 +73,7 @@ with tab1:
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
         st.dataframe(predictions)
     # Chart
-    fig = px.scatter(predictions,x="DATE",y="VALUE",color="TYPE")
+    fig = px.line(predictions,x="DATE",y="VALUE",color="TYPE")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab2:
