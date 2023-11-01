@@ -2,6 +2,8 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 import numpy as np
 from statsmodels.tsa.holtwinters import SimpleExpSmoothing
+from statsmodels.tsa.arima.model import ARIMA
+from pmdarima import auto_arima
 
 def predict_linear_regression(df, n_months):
     """
@@ -60,3 +62,28 @@ def predict_linear_regression(df, n_months):
         predictions = pd.concat([df, result], axis=0)
         
         return predictions
+    
+    def predict_auto_arima(df, n_months=6):
+        """
+        Predict sales for the next 'n' months using auto ARIMA.
+        
+        :param df: DataFrame containing a 'VALUE' column with monthly sales data.
+        :param n_months: Number of months to predict.
+        :return: DataFrame with predictions for the next 'n' months.
+        """
+        
+        # Fit the ARIMA model using auto_arima
+        model = auto_arima(df['VALUE'], trace=True, error_action='ignore', suppress_warnings=True, seasonal=False)
+        
+        # Predict the next 'n' months
+        forecasts = model.predict(n_periods=n_months)
+        
+        # Find the last DATE occurrence in the DataFrame and create a list with the next 'n' months
+        last_date = df['DATE'].iloc[-1]
+        new_dates = pd.date_range(start=last_date, periods=n_months+1, freq='MS')[1:].to_list()
+
+        result = pd.DataFrame({'DATE': new_dates, 'VALUE': forecasts})
+        result['TYPE'] = 'Forecast'
+        predictions_df = pd.concat([df, result], axis=0)
+        
+        return predictions_df
