@@ -56,7 +56,7 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
 tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
 
 with tab1:
-    col1, col2, col3 = st.columns(4)
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
         selection = st.sidebar.selectbox('Product category to forecast:', product_list)
     with col2:
