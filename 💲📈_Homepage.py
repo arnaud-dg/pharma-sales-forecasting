@@ -68,7 +68,7 @@ with tab1:
         if scope == "Both":
             query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}'".format(selection)
         else:
-            query = r"SELECT DATE, VALUE FROM ATC1 WHERE PRODUCT = '{}' AND MARKET = '{}'".format(selection, scope)
+            query = r"SELECT DATE, VALUE FROM ATC1_BY_MARKET WHERE PRODUCT = '{}' AND MARKET = '{}'".format(selection, scope)
     with col3:
         method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
     with col4:
@@ -80,6 +80,8 @@ with tab1:
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
+    elif method == 'Exponential Smoothing'
+        predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
     # Chart
     fig = px.line(predictions,x="DATE",y="VALUE",color="TYPE")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
