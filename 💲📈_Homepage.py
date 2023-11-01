@@ -56,6 +56,8 @@ df_product = load_data_from_s3(bucket_name, file_key)
 product_list = list(df_product['ATC_Class'].unique())
 product_list.sort()
 product_list = product_list[:5] + ["METFORMINE", "VITAMINES"]
+family_list = list(df_product['ATC_Class2'].unique())
+family_list.sort()
 
 # Interface Streamlit
 st.title("🏥 French Pharmaceutical Sales Forecasting")
@@ -66,7 +68,7 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    selection = st.selectbox('Product family to forecast:', product_list)    
+    selection = st.selectbox('Product family to forecast:', family_list)    
 with col2:
     scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
 with col3:
