@@ -114,7 +114,7 @@ with tab2:
     # Chart
     # st.dataframe(df)
     # st.dataframe(predictions)
-    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE", title="Sales prediction for " + selection")
+    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab3:
