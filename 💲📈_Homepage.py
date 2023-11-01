@@ -6,6 +6,7 @@ import streamlit as st
 import altair as alt
 import snowflake.connector
 import forecasting_functions as ff
+import plotly.express as px
 
 # Layout of the main page
 st.set_page_config(layout="wide")
@@ -67,14 +68,13 @@ with tab1:
     df = fetch_data(query)
     df['DATE'] = pd.to_datetime(df['DATE'])
     df['TYPE'] = 'Actual'
-    st.dataframe(df)
     # Prediction function
     if method == 'Linear Regression':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
         st.dataframe(predictions)
     # Chart
-    
-    st.line_chart(data=df, x='SALESDATE', y='NB_UNITS')
+    fig = px.scatter(predictions,x="DATE",y="VALUE",color="TYPE")
+    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab2:
    st.header("A dog")

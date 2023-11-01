@@ -27,7 +27,7 @@ def predict_linear_regression(df, n_months):
     future_months = np.array(range(len(df) + 1, len(df) + (n_months + 1))).reshape(-1, 1)
     predictions = model.predict(future_months)
 
-    df = df.drop('month_num')
+    df = df.drop('month_num', axis=1)
     result = pd.DataFrame({'DATE': new_dates, 'VALUE': predictions})
     result['TYPE'] = 'Forecast'
     predictions = pd.concat([df, result], axis=0)
