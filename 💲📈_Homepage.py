@@ -66,13 +66,13 @@ tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Fore
 with tab1:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        selection = st.selectbox('Product family to forecast:', family_list)    
+        selection = st.selectbox('Product family to forecast:', family_list, key=1)    
     with col2:
-        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
+        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'], key=1)
     with col3:
-        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'], key=1)
     with col4:
-        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
+        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1, key=1)
     # Filter the dataframe
     if scope == 'Both':
         df = df_family[df_family['PRODUCT'] == selection]
@@ -82,13 +82,13 @@ with tab1:
 with tab2:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        selection = st.selectbox('Product to forecast:', product_list)    
+        selection = st.selectbox('Product to forecast:', product_list, key=2)    
     with col2:
-        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
+        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'], key=2)
     with col3:
-        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'], key=2)
     with col4:
-        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
+        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1, key=2)
     # Filter the dataframe
     if scope == 'Both':
         df = df_prod[df_prod['PRODUCT'] == selection]
