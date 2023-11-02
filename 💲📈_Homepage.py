@@ -44,7 +44,7 @@ df_prod = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
 df_prod_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
 df_family = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
 df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
-for i in [df_prod, df_prod_scope, df_family, df_family_scope']]:
+for i in [df_prod, df_prod_scope, df_family, df_family_scope']:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
 
