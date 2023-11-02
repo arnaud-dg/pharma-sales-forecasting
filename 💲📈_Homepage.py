@@ -120,7 +120,7 @@ with tab2:
     # Prediction function
 
     with st.expander("Forecasting method explanations"):
-    st.write(text)
+        st.write(text)
 
     # Chart
     fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE", color_discrete_map=color_map)
