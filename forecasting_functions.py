@@ -4,8 +4,10 @@ import numpy as np
 from statsmodels.tsa.holtwinters import SimpleExpSmoothing
 from statsmodels.tsa.arima.model import ARIMA
 from pmdarima import auto_arima
-from keras.models import Sequential
-from keras.layers import LSTM, Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.preprocessing.sequence import TimeseriesGenerator
 
 def predict_linear_regression(df, n_months):
     """
@@ -95,3 +97,54 @@ def predict_auto_arima(df, n_months):
         predictions = pd.concat([df, result], axis=0)
         
         return predictions
+
+def predict_lstm(df, n_months, n_input, n_features):
+    """
+    Predict sales for the next 'n' months using an LSTM network.
+    :param df: DataFrame containing a 'Value' column with monthly sales data.
+    :param n_months: Number of months to predict.
+    :param n_input: The number of lag months to use for the LSTM input.
+    :param n_features: The number of features to use in the LSTM model (usually 1 for univariate time series).
+    :return: DataFrame with predictions for the next 'n' months.
+    """
+    # Ensure the data is in the correct shape
+    df['Value'] = df['Value'].astype(float)
+
+    # Normalize the data
+    scaler = MinMaxScaler()
+    scaled_data = scaler.fit_transform(df['Value'].values.reshape(-1, 1))
+
+    # Prepare the data for LSTM
+    generator = TimeseriesGenerator(scaled_data, scaled_data, length=n_input, batch_size=1)
+
+    # Define the LSTM model
+    model = Sequential()
+    model.add(LSTM(100, activation='relu', input_shape=(n_input, n_features)))
+    model.add(Dense(1))
+    model.compile(optimizer='adam', loss='mse')
+
+    # Fit the model
+    model.fit(generator, epochs=200)
+
+    # Make predictions
+    last_n_months = scaled_data[-n_input:]
+    predictions = []
+    current_batch = last_n_months.reshape((1, n_input, n_features))
+
+    for i in range(n_months):
+        current_pred = model.predict(current_batch)[0]
+        predictions.append(current_pred)
+        current_batch = np.append(current_batch[:, 1:, :], [[current_pred]], axis=1)
+
+    # Inverse transform to get the predictions back to the original scale
+    predictions = scaler.inverse_transform(predictions)
+
+    # Prepare the dates for the forecast
+    last_date = pd.to_datetime(df['DATE'].iloc[-1])
+    prediction_dates = [last_date + pd.DateOffset(months=x) for x in range(1, n_months + 1)]
+
+    # Create a DataFrame to hold the predictions
+    forecast_df = pd.DataFrame(data=predictions, columns=['Forecast'])
+    forecast_df['DATE'] = prediction_dates
+
+    return forecast_df

@@ -131,7 +131,7 @@ with tab2:
         expander_title = "Linear Regression explanation"
         expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
     elif method == 'LSTM':
-        predictions = ff.predict_lstm(df, prediction_timeframe)
+        predictions = ff.predict_lstm(df, prediction_timeframe, 12, 1)
         expander_title = "Linear Regression explanation"
         expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
     elif method == 'Prophet':
