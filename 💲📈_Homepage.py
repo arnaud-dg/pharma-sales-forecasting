@@ -72,7 +72,7 @@ with tab1:
     with col3:
         method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'], key=3)
     with col4:
-        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1, key=3)
+        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1, key=4)
     # Filter the dataframe
     if scope == 'Both':
         df = df_family[df_family['PRODUCT'] == selection]
