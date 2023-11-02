@@ -40,10 +40,21 @@ def load_data_from_s3(bucket_name, file_key):
     df = pd.read_csv(BytesIO(content))
     return df
 
-df_prod = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
-df_prod_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
-df_family = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
-df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
+def initialize_dataframes():
+    if 'df1' not in st.session_state:
+        st.session_state['df1'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
+    if 'df2' not in st.session_state:
+        st.session_state['df2'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
+    if 'df3' not in st.session_state:
+        st.session_state['df3'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
+    if 'df4' not in st.session_state:
+        st.session_state['df4'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
+initialize_dataframes()
+
+df_prod = st.session_state['df1']
+df_prod_scope = st.session_state['df2']
+df_family = st.session_state['df3']
+df_family_scope = st.session_state['df4']
 for i in [df_prod, df_prod_scope, df_family, df_family_scope]:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
