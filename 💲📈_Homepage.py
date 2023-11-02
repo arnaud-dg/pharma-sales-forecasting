@@ -48,9 +48,14 @@ if 'df_family' not in st.session_state:
     st.session_state['df_family'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
 if 'df_family_scope' not in st.session_state:
     st.session_state['df_family_scope'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
-    for i in [st.session_state['df_prod'], st.session_state['df_prod_scope'], st.session_state['df_family'], st.session_state['df_family_scope']]:
-        i['DATE'] = pd.to_datetime(i['DATE'])
-        i['TYPE'] = 'Actual'
+for i in [st.session_state['df_prod'], st.session_state['df_prod_scope'], st.session_state['df_family'], st.session_state['df_family_scope']]:
+    i['DATE'] = pd.to_datetime(i['DATE'])
+    i['TYPE'] = 'Actual'
+
+st.dataframe(df_prod)
+st.dataframe(df_prod_scope)
+st.dataframe(df_family)
+st.dataframe(df_family_scope)
 
 # Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
