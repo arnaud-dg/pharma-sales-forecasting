@@ -42,10 +42,10 @@ for i in [df_product, df_product_scope, df_family, df_family_scope]:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
 
-st.dataframe(df_product[df_product['PRODUCT'] == 'ABACAVIR'])
-st.dataframe(df_product_scope)
-st.dataframe(df_family)
-st.dataframe(df_family_scope)
+# st.dataframe(df_product)
+# st.dataframe(df_product_scope)
+# st.dataframe(df_family)
+# st.dataframe(df_family_scope)
 
 # Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
@@ -84,6 +84,7 @@ with tab1:
 with tab2:
     # Filter the dataframe
     st.write(selection)
+    st.dataframe(df_product)
     if scope == 'Both':
         df = df_product[df_product['PRODUCT'] == selection]
     else:
