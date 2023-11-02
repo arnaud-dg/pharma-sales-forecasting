@@ -40,13 +40,14 @@ def load_data_from_s3(bucket_name, file_key):
     df = pd.read_csv(BytesIO(content))
     return df
 
-df_prod = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
-df_prod_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
-df_family = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
-df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
-for i in [df_prod, df_prod_scope, df_family, df_family_scope]:
-    i['DATE'] = pd.to_datetime(i['DATE'])
-    i['TYPE'] = 'Actual'
+if 'df_prod' not in st.session_state:
+    st.session_state['df_prod'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
+    st.session_state['df_prod_scope'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
+    st.session_state['df_family'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
+    st.session_state['df_family_scope'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
+    for i in [st.session_state['df_prod'], st.session_state['df_prod_scope'], st.session_state['df_family'], st.session_state['df_family_scope']]:
+        i['DATE'] = pd.to_datetime(i['DATE'])
+        i['TYPE'] = 'Actual'
 
 # Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
@@ -103,30 +104,42 @@ with tab2:
 
     if method == 'Linear Regression':
         predictions, curve = ff.predict_linear_regression(df, prediction_timeframe)
-        text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line."
+        expander_title = "Linear Regression explanation"
+        expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
     elif method == 'Moving Average':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
         # predictions = ff.predict_moving_average(df, prediction_timeframe)
+        expander_title = "Linear Regression explanation"
+        expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
     elif method == 'Exponential Smoothing':
         predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
+        expander_title = "Linear Regression explanation"
+        expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
     elif method == 'ARIMA':
         predictions = ff.predict_auto_arima(df, prediction_timeframe)
+        expander_title = "Linear Regression explanation"
+        expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
     elif method == 'LSTM':
         predictions = ff.predict_lstm(df, prediction_timeframe)
+        expander_title = "Linear Regression explanation"
+        expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
     elif method == 'Prophet':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        expander_title = "Linear Regression explanation"
+        expander_text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line through an equation y = ax + b."
         # predicti ons = ff.predict_prophet(df, prediction_timeframe)
-
-    with st.expander("Forecasting method explanations"):
-        st.write(text)
 
     # Chart
     fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE", color_discrete_map=color_map)
     if method == 'Linear Regression':
-        new_trace = go.Scatter(x=curve['DATE'], y=curve['VALUE'], mode='markers+lines', name='Regression line', line=dict(color='black', dash='dot'), opacity=0.5)
+        new_trace = go.Scatter(x=curve['DATE'], y=curve['VALUE'], mode='lines', name='Regression line', line=dict(color='black', dash='dot'), opacity=0.5)
         fig.add_trace(new_trace)
     fig.update_layout(legend=dict(yanchor="top",y=1.0,xanchor="right",x=1.0,bgcolor="rgba(255, 255, 255, 0.5)", borderwidth=1))
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+
+    # Explanations
+    with st.expander(expander_title):
+        st.write(expander_text)
 
 with tab3:
    st.header("An owl")
