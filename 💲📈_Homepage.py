@@ -38,7 +38,7 @@ df_prod = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
 df_prod_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
 df_family = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
 df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
-for i in [df_product, df_product_scope, df_family, df_family_scope]:
+for i in [df_prod, df_prod_scope, df_family, df_family_scope]:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
 
@@ -53,6 +53,7 @@ product_list.sort()
 product_list = product_list[:5] + ["METFORMINE", "VITAMINES"]
 family_list = list(df_product['ATC_Class2'].unique())
 family_list.sort()
+family_list = family_list[:5]
 
 # Interface Streamlit
 st.title("🏥 French Pharmaceutical Sales Forecasting")
@@ -61,22 +62,33 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
                  The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
 
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    selection = st.selectbox('Product family to forecast:', product_list)    
-with col2:
-    scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
-with col3:
-    method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
-with col4:
-    prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
-
 tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
 with tab1:
-    st.write("blabla")
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        selection = st.selectbox('Product family to forecast:', family_list)    
+    with col2:
+        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
+    with col3:
+        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+    with col4:
+        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
     # Filter the dataframe
+    if scope == 'Both':
+        df = df_family[df_family['PRODUCT'] == selection]
+    else:
+        df = df_family_scope[(df_family_scope['PRODUCT'] == selection) & (df_family_scope['SCOPE'] == scope)]
 
 with tab2:
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        selection = st.selectbox('Product to forecast:', product_list)    
+    with col2:
+        scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'])
+    with col3:
+        method = st.selectbox('Forecasting method:', ['Linear Regression', 'Moving Average', 'Exponential Smoothing', 'ARIMA', 'LSTM', 'Prophet'])
+    with col4:
+        prediction_timeframe = st.slider('Forecasting horizon (in months):', min_value=3, value=6, max_value=12, step=1)
     # Filter the dataframe
     if scope == 'Both':
         df = df_prod[df_prod['PRODUCT'] == selection]
