@@ -68,6 +68,22 @@ st.sidebar.write("""This web application, made with Streamlit, is a personal pro
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
                  The aim of this application is to provide a trend analysis and trend prediction of the drug consumption in France.""")
 
+if method == 'Linear Regression':
+        predictions, curve = ff.predict_linear_regression(df, prediction_timeframe)
+        text = "Linear regression is a forecasting methodology that predicts the value of a variable based on the linear relationship between that variable and one or more predictor variables. The method involves finding the best-fit line through the data points, which minimizes the sum of the squared differences between the observed values and the values predicted by the line."
+    elif method == 'Moving Average':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        # predictions = ff.predict_moving_average(df, prediction_timeframe)
+    elif method == 'Exponential Smoothing':
+        predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
+    elif method == 'ARIMA':
+        predictions = ff.predict_auto_arima(df, prediction_timeframe)
+    elif method == 'LSTM':
+        predictions = ff.predict_lstm(df, prediction_timeframe)
+    elif method == 'Prophet':
+        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        # predictions = ff.predict_prophet(df, prediction_timeframe)
+
 tab1, tab2, tab3 = st.tabs(["Forecast by category", "Forecast by product", "Forecast by reference"])
 with tab1:
     col1, col2, col3, col4 = st.columns(4)
@@ -102,26 +118,14 @@ with tab2:
         df = df_prod_scope[(df_prod_scope['PRODUCT'] == selection) & (df_prod_scope['SCOPE'] == scope)]
 
     # Prediction function
-    
-    if method == 'Linear Regression':
-        predictions, curve = ff.predict_linear_regression(df, prediction_timeframe)
-    elif method == 'Moving Average':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe)
-        # predictions = ff.predict_moving_average(df, prediction_timeframe)
-    elif method == 'Exponential Smoothing':
-        predictions = ff.predict_exponential_smoothing(df, prediction_timeframe)
-    elif method == 'ARIMA':
-        predictions = ff.predict_auto_arima(df, prediction_timeframe)
-    elif method == 'LSTM':
-        predictions = ff.predict_lstm(df, prediction_timeframe)
-    elif method == 'Prophet':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe)
-        # predictions = ff.predict_prophet(df, prediction_timeframe)
+
+    with st.expander("Forecasting method explanations"):
+    st.write(text)
 
     # Chart
     fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE", color_discrete_map=color_map)
     if method == 'Linear Regression':
-        new_trace = go.Scatter(x=curve['DATE'], y=curve['VALUE'], mode='lines', name='Regression line', line=dict(color='black', dash='dot'), opacity=0.5)
+        new_trace = go.Scatter(x=curve['DATE'], y=curve['VALUE'], mode='markers+lines', name='Regression line', line=dict(color='black', dash='dot'), opacity=0.5)
         fig.add_trace(new_trace)
     fig.update_layout(legend=dict(yanchor="top",y=1.0,xanchor="right",x=1.0,bgcolor="rgba(255, 255, 255, 0.5)", borderwidth=1))
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
