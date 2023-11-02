@@ -74,7 +74,7 @@ family_list.sort()
 family_list = family_list[:5]
 
 # Interface Streamlit
-st.title("🏥 French Drugs Sales Forecasting")
+st.title("📈 Drugs Sales Forecasting - French Market :flag-fr:")
 
 st.sidebar.write("""This web application, made with Streamlit, is a personal project I undertook to practice with Time-series Forecasting. 
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
@@ -100,7 +100,8 @@ with tab1:
 with tab2:
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        selection = st.selectbox('Product to forecast:', product_list, key=5)    
+        selection = st.selectbox('Product to forecast:', product_list, key=5)
+        chart_title = "Sales Forecasting" + " - " + selection   
     with col2:
         scope = st.selectbox('Forecasting scope:', ['Both','Community pharmacy', 'Hospital'], key=6)
     with col3:
@@ -146,7 +147,8 @@ with tab2:
     if method == 'Linear Regression':
         new_trace = go.Scatter(x=curve['DATE'], y=curve['VALUE'], mode='lines', name='Regression line', line=dict(color='black', dash='dot'), opacity=0.5)
         fig.add_trace(new_trace)
-    fig.update_layout(legend=dict(yanchor="top",y=1.0,xanchor="right",x=1.0,bgcolor="rgba(255, 255, 255, 0.5)", borderwidth=1))
+    fig.update_layout(legend=dict(yanchor="top",y=1.0,xanchor="right",x=1.0,bgcolor="rgba(255, 255, 255, 0.5)", borderwidth=1), 
+                      xaxis_title="", yaxis_title="Sales reimbursed (M€)", title=chart_title)
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
     # Raw data
