@@ -8,3 +8,4 @@ statsmodels
 pmdarima
 keras
 tensorflow
+prophet
