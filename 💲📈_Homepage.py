@@ -7,6 +7,7 @@ import altair as alt
 import snowflake.connector
 import forecasting_functions as ff
 import plotly.express as px
+import plotly.graph_objs as go
 
 # Layout of the main page
 st.set_page_config(layout="wide")
