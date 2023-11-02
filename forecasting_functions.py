@@ -108,11 +108,11 @@ def predict_lstm(df, n_months, n_input, n_features):
     :return: DataFrame with predictions for the next 'n' months.
     """
     # Ensure the data is in the correct shape
-    df['Value'] = df['Value'].astype(float)
+    df['VALUE'] = df['VALUE'].astype(float)
 
     # Normalize the data
     scaler = MinMaxScaler()
-    scaled_data = scaler.fit_transform(df['Value'].values.reshape(-1, 1))
+    scaled_data = scaler.fit_transform(df['VALUE'].values.reshape(-1, 1))
 
     # Prepare the data for LSTM
     generator = TimeseriesGenerator(scaled_data, scaled_data, length=n_input, batch_size=1)
