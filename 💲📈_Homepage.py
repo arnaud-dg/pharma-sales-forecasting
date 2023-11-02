@@ -34,18 +34,13 @@ def load_data_from_s3(bucket_name, file_key):
     df = pd.read_csv(BytesIO(content))
     return df
 
-df_product = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
-df_product_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
+df_prod = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
+df_prod_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
 df_family = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
 df_family_scope = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
 for i in [df_product, df_product_scope, df_family, df_family_scope]:
     i['DATE'] = pd.to_datetime(i['DATE'])
     i['TYPE'] = 'Actual'
-
-# st.dataframe(df_product)
-# st.dataframe(df_product_scope)
-# st.dataframe(df_family)
-# st.dataframe(df_family_scope)
 
 # Import the csv files from S3 bucket - CIP product table
 bucket_name = "pharma-sales-forecasting"
@@ -83,12 +78,10 @@ with tab1:
 
 with tab2:
     # Filter the dataframe
-    st.write(selection)
-    st.dataframe(df_product)
     if scope == 'Both':
-        df = df_product[df_product['PRODUCT'] == selection]
+        df = df_prod[df_prod['PRODUCT'] == selection]
     else:
-        df = df_product_scope[(df_product_scope['PRODUCT'] == selection) & (df_product_scope['SCOPE'] == scope)]
+        df = df_prod_scope[(df_prod_scope['PRODUCT'] == selection) & (df_prod_scope['SCOPE'] == scope)]
 
     # Prediction function
     if method == 'Linear Regression':
