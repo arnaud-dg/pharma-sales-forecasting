@@ -148,6 +148,10 @@ with tab2:
     fig.update_layout(legend=dict(yanchor="top",y=1.0,xanchor="right",x=1.0,bgcolor="rgba(255, 255, 255, 0.5)", borderwidth=1))
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
+    # Raw data
+    with st.expander("Forecasting raw data"):
+        st.dataframe(predictions[predictions['TYPE']=='Forecast'][['DATE', 'VALUE']])
+
     # Explanations
     with st.expander(expander_title):
         st.write(expander_text)
