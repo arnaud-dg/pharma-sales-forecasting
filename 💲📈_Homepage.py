@@ -42,8 +42,11 @@ def load_data_from_s3(bucket_name, file_key):
 
 if 'df_prod' not in st.session_state:
     st.session_state['df_prod'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC1")
+if 'df_prodçscope' not in st.session_state:
     st.session_state['df_prod_scope'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC1_BY_MARKET")
+if 'df_family' not in st.session_state:
     st.session_state['df_family'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT FROM ATC2")
+if 'df_family_scope' not in st.session_state:
     st.session_state['df_family_scope'] = fetch_data(r"SELECT DATE, VALUE, PRODUCT, SCOPE FROM ATC2_BY_MARKET")
     for i in [st.session_state['df_prod'], st.session_state['df_prod_scope'], st.session_state['df_family'], st.session_state['df_family_scope']]:
         i['DATE'] = pd.to_datetime(i['DATE'])
@@ -63,7 +66,7 @@ family_list.sort()
 family_list = family_list[:5]
 
 # Interface Streamlit
-st.title("🏥 French Pharmaceutical Sales Forecasting")
+st.title("🏥 French Drugs Sales Forecasting")
 
 st.sidebar.write("""This web application, made with Streamlit, is a personal project I undertook to practice with Time-series Forecasting. 
                  The technical stack used implies AWS, Snowflake, SQL, and Python. 
