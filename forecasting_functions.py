@@ -28,9 +28,13 @@ def predict_linear_regression(df, n_months):
     model = LinearRegression()
     model.fit(X, y)
 
+    # Regression curve
+    regression_values = model.predict(X)
+    regression_df = pd.DataFrame({'DATE': df['DATE'], 'VALUE': regression_values})
     # Prediction for the next n months
     future_months = np.array(range(len(df) + 1, len(df) + (n_months + 1))).reshape(-1, 1)
     predictions = model.predict(future_months)
+    
 
     df = df.drop('month_num', axis=1)
     result = pd.DataFrame({'DATE': new_dates, 'VALUE': predictions})
@@ -38,7 +42,7 @@ def predict_linear_regression(df, n_months):
     result.loc[result['VALUE'] < 0, 'VALUE'] = 0
     predictions = pd.concat([df, result], axis=0)
 
-    return predictions
+    return predictions, regression_df
 
 def predict_exponential_smoothing(df, n_months):
         """

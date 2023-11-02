@@ -96,8 +96,9 @@ with tab2:
         df = df_prod_scope[(df_prod_scope['PRODUCT'] == selection) & (df_prod_scope['SCOPE'] == scope)]
 
     # Prediction function
+    
     if method == 'Linear Regression':
-        predictions = ff.predict_linear_regression(df, prediction_timeframe)
+        predictions, curve = ff.predict_linear_regression(df, prediction_timeframe)
     elif method == 'Moving Average':
         predictions = ff.predict_linear_regression(df, prediction_timeframe)
         # predictions = ff.predict_moving_average(df, prediction_timeframe)
@@ -115,6 +116,9 @@ with tab2:
     # st.dataframe(df)
     # st.dataframe(predictions)
     fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
+    if method == 'Linear Regression':
+        new_trace = go.Scatter(x=curve['DATE'], y=curve['VALUE'], mode='lines', name='Regression line', line=dict(color='black', dash='dot'))
+    fig.add_trace(new_trace)
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab3:
