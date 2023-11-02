@@ -31,6 +31,7 @@ def predict_linear_regression(df, n_months):
     # Regression curve
     regression_values = model.predict(X)
     regression_df = pd.DataFrame({'DATE': df['DATE'], 'VALUE': regression_values})
+    regression_df.loc[regression_df['VALUE'] < 0, 'VALUE'] = 0
     # Prediction for the next n months
     future_months = np.array(range(len(df) + 1, len(df) + (n_months + 1))).reshape(-1, 1)
     predictions = model.predict(future_months)
