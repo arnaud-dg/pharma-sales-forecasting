@@ -12,6 +12,11 @@ import plotly.graph_objs as go
 # Layout of the main page
 st.set_page_config(layout="wide")
 
+color_map = {
+    'Actual': 'blue',  # Remplacer 'Type1' par la valeur réelle de votre colonne 'TYPE'
+    'Forecast': 'red'    # Remplacer 'Type2' par la valeur réelle de votre colonne 'TYPE'
+}
+
 # Initializing du client S3
 s3 = boto3.client('s3')
 
@@ -116,10 +121,11 @@ with tab2:
     # Chart
     # st.dataframe(df)
     # st.dataframe(predictions)
-    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE")
+    fig = px.line(predictions, x="DATE", y="VALUE", color="TYPE", color_discrete_map=color_map)
     if method == 'Linear Regression':
         new_trace = go.Scatter(x=curve['DATE'], y=curve['VALUE'], mode='lines', name='Regression line', line=dict(color='black', dash='dot'))
-    fig.add_trace(new_trace)
+        fig.add_trace(new_trace)
+    fig.update_layout(legend=dict(yanchor="top",y=1.0,xanchor="right",x=1.0,bgcolor="rgba(255, 255, 255, 0.5)", borderwidth=1))
     st.plotly_chart(fig, theme="streamlit", use_container_width=True)
 
 with tab3:
